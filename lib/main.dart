@@ -1,31 +1,78 @@
 import 'package:flutter/material.dart';
-import 'package:mocking_eg7/MyNewApp.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key key}) : super(key: key);
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Flutter Reversi',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyNewApp(),
+      home: HomePage(),
     );
   }
+}
+
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  TextEditingController _controller;
+  String _reversed;
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Flutter Reversi'),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: "Enter string to reverse"),
+            ),
+            const SizedBox(height: 10.0),
+            if (_reversed != null) ...[
+              Text(
+                _reversed,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.0,
+                ),
+              ),
+              const SizedBox(height: 10.0),
+            ],
+            RaisedButton(
+              child: Text("Reverse"),
+              onPressed: () {
+                if (_controller.text.isEmpty) return;
+                setState(() {
+                  _reversed = reverseString(_controller.text);
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+String reverseString(String initial) {
+  return initial.split('').reversed.join();
 }
